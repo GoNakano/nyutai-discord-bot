@@ -1,22 +1,23 @@
-# Python virtual environment
-.venv/
-venv/
-ENV/
-
-# Python cache files
-__pycache__/
-*.py[cod]
-*$py.class
-
 # Environment variables
 .env
+.env.*
+!.env.example
 
-# IDE specific files
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# macOS
+.DS_Store
+__MACOSX/
+
+# Editor
 .vscode/
 .idea/
-
-# Logs
-*.log
-
-# macOS system files
-.DS_Store
