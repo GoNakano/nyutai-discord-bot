@@ -87,3 +87,4 @@ nyutai-discord-bot/
 ├── requirements.txt
 ├── README.md
 └── .gitignore
+```
