@@ -1,110 +1,89 @@
-# ✅ Discord入退室Bot 実行マニュアル (Google Compute Engine 用)
+# nyutai-discord-bot
 
-この手順は GitHub にある `bot.py` と `requirements.txt` の2つのファイルから、  
-GCE (Google Cloud Platform) 上に 24時間動作する Discord Bot を構築するための手順です。
+塾での入退室ログをDiscord上から確認できるようにするためのPython製Discord Botです。  
+外部の入退室管理APIから生徒情報と入退室ログを取得し、Discordのスラッシュコマンドから生徒ごとの直近1週間の入退室状況を確認できます。
 
----
+## 概要
 
-## ▶ 前提条件
+このBotは、塾の入退室情報を確認する作業を効率化するために作成しました。
 
-- Google Cloud Platform のアカウント
-- Discord Bot Token を [Discord Developer Portal](https://discord.com/developers/applications) で登録済み
-- NYUTAI API Token (入退くんAPI)
+通常は別システムを開いて確認する必要がある入退室ログを、普段利用しているDiscord上から確認できるようにすることで、確認作業の手間を減らすことを目的としています。
 
----
+Google Compute Engine上で常時稼働させることを想定し、Discord Bot、外部API、環境変数によるトークン管理を組み合わせて実装しています。
 
-## ▶ ステップ 1: GCE VM インスタンス作成
+## 主な機能
 
-1. [Google Cloud Console](https://console.cloud.google.com/) にログイン
-2. 左メニュー「Compute Engine」→「VM インスタンス」
-3. 「インスタンスを作成」:
-   - 名前: `discord-bot` など
-   - リージョン: `us-west1` (無料枠)
-   - マシン: `e2-micro` (無料枠)
-   - OS: Ubuntu 22.04 LTS
-4. 「作成」ボタンを押す
+- Discordのスラッシュコマンド `/log` による入退室ログ確認
+- 生徒名による検索
+- 検索結果から対象の生徒を選択
+- 外部APIから生徒一覧・入退室ログを取得
+- 直近1週間の入退室ログを表示
+- 合計滞在時間の集計
+- Discord Embedによる見やすい表示
+- `.env` を用いたBot Token / API Tokenの管理
+- Google Compute Engine上での常時実行
 
----
+## 使用技術
 
-## ▶ ステップ 2: SSH で接続して準備
+- Python
+- discord.py
+- requests
+- python-dotenv
+- Discord Bot API
+- Google Compute Engine
+- Git / GitHub
 
-```bash
-sudo apt update && sudo apt install -y python3 python3-pip git nano tmux
-cd ~
-```
+## 開発背景
 
----
+塾の運営では、生徒の入退室状況を確認する場面があります。  
+しかし、確認のたびに専用システムを開く必要があり、日常的な確認作業としては少し手間がかかっていました。
 
-## ▶ ステップ 3: 必要ファイルの作成
+そこで、普段利用しているDiscord上で入退室ログを確認できるBotを作成しました。  
+これにより、Discordのコマンド操作だけで、生徒ごとの直近の入退室状況を確認できるようにしました。
 
-### 📄 `bot.py` の作成
+## 工夫した点
 
-```bash
-nano bot.py
-```
+### Discord上で使いやすい操作にした
 
-→ GitHub の `bot.py` 内容を貼り付け、`Ctrl + O` → `Enter` → `Ctrl + X`
+生徒名を入力すると候補が表示され、対象の生徒を選択できるようにしました。  
+完全一致ではなく部分一致で検索できるため、フルネームを入力しなくても対象を探しやすくしています。
 
-### 📄 `requirements.txt` の作成
+### 入退室ログを見やすく表示した
 
-```bash
-nano requirements.txt
-```
+取得したログをそのまま表示するのではなく、日付・曜日・入室時刻・退室時刻・滞在時間を整理して表示するようにしました。  
+また、Discord Embedを使うことで、通常のテキストよりも読みやすい表示になるようにしました。
 
-```txt
-discord.py>=2.5.2
-python-dotenv>=1.1.0
-requests>=2.32.3
-```
+### 合計滞在時間を集計した
 
-→ 保存して終了
+直近1週間の入退室ログから、生徒ごとの合計滞在時間を計算して表示するようにしました。  
+単にログを表示するだけでなく、学習時間の確認にも使いやすい形を意識しました。
 
----
+### トークンを安全に管理した
 
-## ▶ ステップ 4: `.env` ファイルの作成
+Discord Bot TokenやAPI Tokenをコードに直接書かず、`.env` ファイルから読み込むようにしました。  
+公開リポジトリでも機密情報が漏れないよう、環境変数を使った管理を行っています。
 
-```bash
-nano .env
-```
+### 常時稼働を想定した構成にした
 
-```
-DISCORD_TOKEN=あなたのDiscordトークン
-NYUTAI_API_TOKEN=あなたのAPIトークン
-```
+Google Compute Engine上でBotを動かし、`tmux` を使ってバックグラウンド実行できるようにしました。  
+ローカルPCを起動していなくてもBotが動作する構成を想定しています。
 
----
+## 学んだこと
 
-## ▶ ステップ 5: ライブラリのインストール
+- PythonによるDiscord Bot開発
+- Discordのスラッシュコマンドの実装
+- Discord UIコンポーネントの利用
+- 外部APIとの連携
+- APIレスポンスの整形と表示
+- `.env` を用いた機密情報管理
+- Google Compute Engine上でのPythonアプリ実行
+- 実際の業務・運用に近い課題を小さなツールで解決する経験
 
-```bash
-pip3 install -r requirements.txt
-```
+## ファイル構成
 
----
-
-## ▶ ステップ 6: Bot を起動
-
-```bash
-python3 bot.py
-```
-
----
-
-## ▶ ステップ 7: tmux でバックグラウンド実行
-
-```bash
-tmux new -s discordbot
-python3 bot.py
-```
-
-→ `Ctrl + B` → `D` で離脱  
-→ 復帰は `tmux attach -t discordbot`
-
----
-
-## ✅ 完了！
-
-- Discord 上で `/log` コマンドを実行
-- Bot が入退室ログを表示
-
-これで他の校舎でも同じように構築できます。
+```text
+nyutai-discord-bot/
+├── bot.py
+├── requirements.txt
+├── README.md
+└── .gitignore
