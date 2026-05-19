@@ -86,5 +86,6 @@ nyutai-discord-bot/
 ├── bot.py
 ├── requirements.txt
 ├── README.md
+├── .env.example
 └── .gitignore
 ```
