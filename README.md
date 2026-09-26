@@ -1,7 +1,7 @@
 # nyutai-discord-bot
 
 > [!NOTE]
-> このリポジトリは、外部APIを利用していた旧版の記録です。入退室管理システムの変更後は、CSV取得方式へ作り直した後継Botを別のPrivateリポジトリで管理・運用しています。
+> このリポジトリは、外部APIを利用していた旧版の記録です。入退室管理システムの変更後は、CSV取得方式へ作り直した後継Bot [takeda-log-discord-bot](https://github.com/GoNakano/takeda-log-discord-bot) を運用しています。
 
 塾での入退室ログをDiscord上から確認できるようにするためのPython製Discord Botです。  
 外部の入退室管理APIから生徒情報と入退室ログを取得し、Discordのスラッシュコマンドから生徒ごとの直近1週間の入退室状況を確認できます。
