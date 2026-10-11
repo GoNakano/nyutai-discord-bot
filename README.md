@@ -4,7 +4,7 @@
 > このリポジトリは、外部APIを利用していた旧版の記録です。入退室管理システムの変更後は、CSV取得方式へ作り直した後継Bot [takeda-log-discord-bot](https://github.com/GoNakano/takeda-log-discord-bot) を運用しています。
 
 塾での入退室ログをDiscord上から確認できるようにするためのPython製Discord Botです。  
-入退室管理サービス「入退くん」のAPIから生徒一覧と入退室ログを取得し、Discordのスラッシュコマンドから生徒ごとの直近1週間の入退室状況を確認できます。
+外部の入退室管理APIから生徒一覧と入退室ログを取得し、Discordのスラッシュコマンドから生徒ごとの直近1週間の入退室状況を確認できます。
 
 ## 概要
 
@@ -32,7 +32,7 @@ Discord Bot、外部API、環境変数によるトークン管理を組み合わ
 - requests
 - python-dotenv
 - Discord Bot API
-- Google Compute Engine
+- Google Compute Engine（動作環境として想定）
 - Git / GitHub
 
 ## 開発背景
@@ -67,8 +67,7 @@ Discord Bot TokenやAPI Tokenをコードに直接書かず、`.env` ファイ�
 
 ### 常時稼働を想定した構成にした
 
-Google Compute Engine上でBotを動かし、`tmux` を使ってバックグラウンド実行できるようにしました。  
-ローカルPCを起動していなくてもBotが動作する構成を想定しています。
+Google Compute Engine上で `tmux` を使ってバックグラウンド実行し、ローカルPCを起動していなくてもBotが動作する構成を想定しています。
 
 ## 学んだこと
 
@@ -78,7 +77,6 @@ Google Compute Engine上でBotを動かし、`tmux` を使ってバックグラ�
 - 外部APIとの連携
 - APIレスポンスの整形と表示
 - `.env` を用いた機密情報管理
-- Google Compute Engine上でのPythonアプリ実行
 - 実際の業務・運用に近い課題を小さなツールで解決する経験
 
 ## 使い方
